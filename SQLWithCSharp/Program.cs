@@ -15,29 +15,51 @@ namespace SQLWithCSharp
                 connection.Open();
                 Console.WriteLine(connection.State);
 
-                #region UPDATE 
-
-                var newCustomer = new Customers()
+                using (var updateCustomerCommand = new SqlCommand("UpdateCustomer", connection))
                 {
-                    CustomerID = "BEARD",
-                    ContactName = "Martin Beard",
-                    City = "London",
-                    CompanyName = "Sparta Global"
-                };
+                    updateCustomerCommand.CommandType = CommandType.StoredProcedure;
 
-                string sqlString = $"INSERT INTO CUSTOMERS(CustomerID, ContactName, CompanyName, City) " +
-                    $"VALUES('{newCustomer.CustomerID}','{newCustomer.ContactName}', '{newCustomer.CompanyName}','{newCustomer.City}')";
+                    updateCustomerCommand.Parameters.AddWithValue("ID", "BEARD");
+                    updateCustomerCommand.Parameters.AddWithValue("NewName", "Eric Smith");
 
-                using (var command2 = new SqlCommand(sqlString, connection))
-                {
-                    int affected = command2.ExecuteNonQuery();
+                    int affected = updateCustomerCommand.ExecuteNonQuery();
                 }
-
                 connection.Close();
+
+
+                #region DELETE
+                //string sqlDeleteString = $"DELETE FROM CUSTOMERS WHERE CustomerID ='BEARD'";
+                //using (var command4 = new SqlCommand(sqlDeleteString, connection))
+                //{
+                //    int affected = command4.ExecuteNonQuery();
+                //}
+
+                //connection.Close();
+                #endregion
+
+                #region CREATE
+
+                //var newCustomer = new Customers()
+                //{
+                //    CustomerID = "BEARD",
+                //    ContactName = "Martin Beard",
+                //    City = "London",
+                //    CompanyName = "Sparta Global"
+                //};
+
+                //string sqlString = $"INSERT INTO CUSTOMERS(CustomerID, ContactName, CompanyName, City) " +
+                //    $"VALUES('{newCustomer.CustomerID}','{newCustomer.ContactName}', '{newCustomer.CompanyName}','{newCustomer.City}')";
+
+                //using (var command2 = new SqlCommand(sqlString, connection))
+                //{
+                //    int affected = command2.ExecuteNonQuery();
+                //}
+
+                //connection.Close();
                 //Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Northwind;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False
                 #endregion
 
-                #region CREATE & READ 
+                #region READ 
                 //using (var command = new SqlCommand("select * from Customers", connection))
                 //{
                 //    SqlDataReader sqlReader = command.ExecuteReader();
@@ -72,7 +94,14 @@ namespace SQLWithCSharp
 
                 //}
                 #endregion
+
+                #region UPDATE
+                //string sqlUpdateString = $"UPDATE CUSTOMERS SET CITY = 'Barcelona' WHERE CustomerID = 'BEARD'";
+                //using (var command3 = new SqlCommand(sqlUpdateString, connection))
+                //{
+                //    int affected = command3.ExecuteNonQuery();
             }
+            #endregion
         }
         public class Customers
         {
